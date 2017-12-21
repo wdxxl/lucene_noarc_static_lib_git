@@ -30,7 +30,7 @@
   IOSByteArray *lastTermBytes_;
   jint lastTermBytesLength_;
   jint lastFieldNumber_;
-  OrgApacheLuceneIndexTermInfosWriter *other_;
+  __unsafe_unretained OrgApacheLuceneIndexTermInfosWriter *other_;
   OrgApacheLuceneUtilUnicodeUtil_UTF8Result *utf8Result_;
 }
 
@@ -62,7 +62,6 @@ J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermInfosWriter, fieldInfos_, OrgApacheL
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermInfosWriter, output_, OrgApacheLuceneStoreIndexOutput *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermInfosWriter, lastTi_, OrgApacheLuceneIndexTermInfo *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermInfosWriter, lastTermBytes_, IOSByteArray *)
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermInfosWriter, other_, OrgApacheLuceneIndexTermInfosWriter *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermInfosWriter, utf8Result_, OrgApacheLuceneUtilUnicodeUtil_UTF8Result *)
 
 __attribute__((unused)) static void OrgApacheLuceneIndexTermInfosWriter_initWithOrgApacheLuceneStoreDirectory_withNSString_withOrgApacheLuceneIndexFieldInfos_withInt_withBoolean_(OrgApacheLuceneIndexTermInfosWriter *self, OrgApacheLuceneStoreDirectory *directory, NSString *segment, OrgApacheLuceneIndexFieldInfos *fis, jint interval, jboolean isIndex);
@@ -169,12 +168,16 @@ withOrgApacheLuceneIndexTermInfo:(OrgApacheLuceneIndexTermInfo *)ti {
   }
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexTermInfosWriter *)original {
+  [super __javaClone:original];
+  [other_ release];
+}
+
 - (void)dealloc {
   RELEASE_(fieldInfos_);
   RELEASE_(output_);
   RELEASE_(lastTi_);
   RELEASE_(lastTermBytes_);
-  RELEASE_(other_);
   RELEASE_(utf8Result_);
   RELEASE_(utf16Result1_);
   RELEASE_(utf16Result2_);
@@ -246,8 +249,8 @@ void OrgApacheLuceneIndexTermInfosWriter_initWithOrgApacheLuceneStoreDirectory_w
   OrgApacheLuceneIndexTermInfosWriter_initialize__WithOrgApacheLuceneStoreDirectory_withNSString_withOrgApacheLuceneIndexFieldInfos_withInt_withBoolean_(self, directory, segment, fis, interval, false);
   jboolean success = false;
   @try {
-    JreStrongAssignAndConsume(&self->other_, new_OrgApacheLuceneIndexTermInfosWriter_initWithOrgApacheLuceneStoreDirectory_withNSString_withOrgApacheLuceneIndexFieldInfos_withInt_withBoolean_(directory, segment, fis, interval, true));
-    JreStrongAssign(&self->other_->other_, self);
+    self->other_ = create_OrgApacheLuceneIndexTermInfosWriter_initWithOrgApacheLuceneStoreDirectory_withNSString_withOrgApacheLuceneIndexFieldInfos_withInt_withBoolean_(directory, segment, fis, interval, true);
+    self->other_->other_ = self;
     success = true;
   }
   @finally {
@@ -298,7 +301,7 @@ void OrgApacheLuceneIndexTermInfosWriter_initialize__WithOrgApacheLuceneStoreDir
     [((OrgApacheLuceneStoreIndexOutput *) nil_chk(self->output_)) writeIntWithInt:self->indexInterval_];
     [((OrgApacheLuceneStoreIndexOutput *) nil_chk(self->output_)) writeIntWithInt:self->skipInterval_];
     [((OrgApacheLuceneStoreIndexOutput *) nil_chk(self->output_)) writeIntWithInt:self->maxSkipLevels_];
-    JreAssert((OrgApacheLuceneIndexTermInfosWriter_initUTF16Results(self)), (@"org/apache/lucene/index/TermInfosWriter.java:118 condition failed: assert initUTF16Results();"));
+    JreAssert((OrgApacheLuceneIndexTermInfosWriter_initUTF16Results(self)), (@"org/apache/lucene/index/TermInfosWriter.java:121 condition failed: assert initUTF16Results();"));
     success = true;
   }
   @finally {

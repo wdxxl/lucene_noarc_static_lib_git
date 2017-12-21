@@ -58,7 +58,7 @@ withOrgApacheLuceneIndexSegmentWriteState:(OrgApacheLuceneIndexSegmentWriteState
       [self fillWithInt:((OrgApacheLuceneIndexSegmentWriteState *) nil_chk(state))->numDocs_];
       OrgApacheLuceneUtilIOUtils_closeWithJavaIoCloseableArray_([IOSObjectArray arrayWithObjects:(id[]){ tvx_, tvf_, tvd_ } count:3 type:JavaIoCloseable_class_()]);
       JreStrongAssign(&tvx_, JreStrongAssign(&tvd_, JreStrongAssign(&tvf_, nil)));
-      JreAssert((state->segmentName_ != nil), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:58 condition failed: assert state.segmentName != null;"));
+      JreAssert((state->segmentName_ != nil), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:59 condition failed: assert state.segmentName != null;"));
       NSString *idxName = OrgApacheLuceneIndexIndexFileNames_segmentFileNameWithNSString_withNSString_(state->segmentName_, OrgApacheLuceneIndexIndexFileNames_VECTORS_INDEX_EXTENSION);
       if (4 + ((jlong) state->numDocs_) * 16 != [((OrgApacheLuceneStoreDirectory *) nil_chk(state->directory_)) fileLengthWithNSString:idxName]) {
         @throw create_JavaLangRuntimeException_initWithNSString_(JreStrcat("$I$J$$$Z", @"after flush: tvx size mismatch: ", state->numDocs_, @" docs vs ", [state->directory_ fileLengthWithNSString:idxName], @" length in bytes of ", idxName, @" file exists?=", [state->directory_ fileExistsWithNSString:idxName]));
@@ -84,7 +84,7 @@ withOrgApacheLuceneIndexSegmentWriteState:(OrgApacheLuceneIndexSegmentWriteState
     if (freeCount_ == 0) {
       allocCount_++;
       if (allocCount_ > ((IOSObjectArray *) nil_chk(docFreeList_))->size_) {
-        JreAssert((allocCount_ == 1 + docFreeList_->size_), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:90 condition failed: assert allocCount == 1+docFreeList.length;"));
+        JreAssert((allocCount_ == 1 + docFreeList_->size_), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:91 condition failed: assert allocCount == 1+docFreeList.length;"));
         JreStrongAssignAndConsume(&docFreeList_, [IOSObjectArray newArrayWithLength:OrgApacheLuceneUtilArrayUtil_oversizeWithInt_withInt_(allocCount_, JreLoadStatic(OrgApacheLuceneUtilRamUsageEstimator, NUM_BYTES_OBJECT_REF)) type:OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc_class_()]);
       }
       return create_OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc_initWithOrgApacheLuceneIndexTermVectorsTermsWriter_(self);
@@ -133,7 +133,7 @@ withOrgApacheLuceneIndexSegmentWriteState:(OrgApacheLuceneIndexSegmentWriteState
 
 - (void)finishDocumentWithOrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc:(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc *)perDoc {
   @synchronized(self) {
-    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(docWriter_))->writer_)) testPointWithNSString:@"TermVectorsTermsWriter.finishDocument start"]), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:141 condition failed: assert docWriter.writer.testPoint(\"TermVectorsTermsWriter.finishDocument start\");"));
+    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(docWriter_))->writer_)) testPointWithNSString:@"TermVectorsTermsWriter.finishDocument start"]), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:142 condition failed: assert docWriter.writer.testPoint(\"TermVectorsTermsWriter.finishDocument start\");"));
     [self initTermVectorsWriter];
     [self fillWithInt:((OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc *) nil_chk(perDoc))->docID_];
     [((OrgApacheLuceneStoreIndexOutput *) nil_chk(tvx_)) writeLongWithLong:[((OrgApacheLuceneStoreIndexOutput *) nil_chk(tvd_)) getFilePointer]];
@@ -143,7 +143,7 @@ withOrgApacheLuceneIndexSegmentWriteState:(OrgApacheLuceneIndexSegmentWriteState
       for (jint i = 0; i < perDoc->numVectorFields_; i++) {
         [((OrgApacheLuceneStoreIndexOutput *) nil_chk(tvd_)) writeVIntWithInt:IOSIntArray_Get(nil_chk(perDoc->fieldNumbers_), i)];
       }
-      JreAssert((0 == IOSLongArray_Get(nil_chk(perDoc->fieldPointers_), 0)), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:155 condition failed: assert 0 == perDoc.fieldPointers[0];"));
+      JreAssert((0 == IOSLongArray_Get(nil_chk(perDoc->fieldPointers_), 0)), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:156 condition failed: assert 0 == perDoc.fieldPointers[0];"));
       jlong lastPos = IOSLongArray_Get(perDoc->fieldPointers_, 0);
       for (jint i = 1; i < perDoc->numVectorFields_; i++) {
         jlong pos = IOSLongArray_Get(nil_chk(perDoc->fieldPointers_), i);
@@ -157,7 +157,7 @@ withOrgApacheLuceneIndexSegmentWriteState:(OrgApacheLuceneIndexSegmentWriteState
     lastDocID_++;
     [perDoc reset];
     [self freeWithOrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc:perDoc];
-    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(docWriter_->writer_)) testPointWithNSString:@"TermVectorsTermsWriter.finishDocument end"]), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:172 condition failed: assert docWriter.writer.testPoint(\"TermVectorsTermsWriter.finishDocument end\");"));
+    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(docWriter_->writer_)) testPointWithNSString:@"TermVectorsTermsWriter.finishDocument end"]), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:173 condition failed: assert docWriter.writer.testPoint(\"TermVectorsTermsWriter.finishDocument end\");"));
   }
 }
 
@@ -190,7 +190,7 @@ withOrgApacheLuceneIndexSegmentWriteState:(OrgApacheLuceneIndexSegmentWriteState
 
 - (void)freeWithOrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc:(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc *)doc {
   @synchronized(self) {
-    JreAssert((freeCount_ < ((IOSObjectArray *) nil_chk(docFreeList_))->size_), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:205 condition failed: assert freeCount < docFreeList.length;"));
+    JreAssert((freeCount_ < ((IOSObjectArray *) nil_chk(docFreeList_))->size_), (@"org/apache/lucene/index/TermVectorsTermsWriter.java:206 condition failed: assert freeCount < docFreeList.length;"));
     IOSObjectArray_Set(docFreeList_, freeCount_++, doc);
   }
 }
@@ -300,9 +300,13 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexTermVectorsTermsWriter)
   [this$0_ finishDocumentWithOrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc:self];
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc *)original {
+  [super __javaClone:original];
+  [buffer_ release];
+}
+
 - (void)dealloc {
   RELEASE_(this$0_);
-  RELEASE_(buffer_);
   RELEASE_(perDocTvf_);
   RELEASE_(fieldNumbers_);
   RELEASE_(fieldPointers_);
@@ -345,7 +349,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexTermVectorsTermsWriter)
 void OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc_initWithOrgApacheLuceneIndexTermVectorsTermsWriter_(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc *self, OrgApacheLuceneIndexTermVectorsTermsWriter *outer$) {
   JreStrongAssign(&self->this$0_, outer$);
   OrgApacheLuceneIndexDocumentsWriter_DocWriter_init(self);
-  JreStrongAssign(&self->buffer_, [((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(outer$->docWriter_)) newPerDocBuffer]);
+  self->buffer_ = [((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(outer$->docWriter_)) newPerDocBuffer];
   JreStrongAssignAndConsume(&self->perDocTvf_, new_OrgApacheLuceneStoreRAMOutputStream_initWithOrgApacheLuceneStoreRAMFile_(self->buffer_));
   JreStrongAssignAndConsume(&self->fieldNumbers_, [IOSIntArray newArrayWithLength:1]);
   JreStrongAssignAndConsume(&self->fieldPointers_, [IOSLongArray newArrayWithLength:1]);

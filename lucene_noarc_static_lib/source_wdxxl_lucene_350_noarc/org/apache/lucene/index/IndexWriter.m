@@ -1246,7 +1246,7 @@ jint OrgApacheLuceneIndexIndexWriter_DEFAULT_MAX_FIELD_LENGTH;
     while ([((JavaUtilLinkedList *) nil_chk(pendingMerges_)) size] > 0 || [((id<JavaUtilSet>) nil_chk(runningMerges_)) size] > 0) {
       OrgApacheLuceneIndexIndexWriter_doWait(self);
     }
-    JreAssert((0 == [((JavaUtilHashSet *) nil_chk(mergingSegments_)) size]), (@"org/apache/lucene/index/IndexWriter.java:3023 condition failed: assert 0 == mergingSegments.size();"));
+    JreAssert((0 == [((JavaUtilHashSet *) nil_chk(mergingSegments_)) size]), (@"org/apache/lucene/index/IndexWriter.java:3026 condition failed: assert 0 == mergingSegments.size();"));
     if (infoStream_ != nil) {
       [self messageWithNSString:@"waitForMerges done"];
     }
@@ -1545,7 +1545,7 @@ withOrgApacheLuceneIndexMergePolicy_OneMerge:(OrgApacheLuceneIndexMergePolicy_On
 
 - (void)addMergeExceptionWithOrgApacheLuceneIndexMergePolicy_OneMerge:(OrgApacheLuceneIndexMergePolicy_OneMerge *)merge {
   @synchronized(self) {
-    JreAssert(([((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge)) getException] != nil), (@"org/apache/lucene/index/IndexWriter.java:4435 condition failed: assert merge.getException() != null;"));
+    JreAssert(([((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge)) getException] != nil), (@"org/apache/lucene/index/IndexWriter.java:4438 condition failed: assert merge.getException() != null;"));
     if (![((id<JavaUtilList>) nil_chk(mergeExceptions_)) containsWithId:merge] && mergeGen_ == merge->mergeGen_) [((id<JavaUtilList>) nil_chk(mergeExceptions_)) addWithId:merge];
   }
 }
@@ -1693,6 +1693,7 @@ withOrgApacheLuceneIndexMergePolicy_OneMerge:(OrgApacheLuceneIndexMergePolicy_On
 - (void)__javaClone:(OrgApacheLuceneIndexIndexWriter *)original {
   [super __javaClone:original];
   JreCloneVolatileStrong(&pendingCommit_, &original->pendingCommit_);
+  [flushControl_ release];
 }
 
 - (void)dealloc {
@@ -1721,7 +1722,6 @@ withOrgApacheLuceneIndexMergePolicy_OneMerge:(OrgApacheLuceneIndexMergePolicy_On
   RELEASE_(readerFinishedListeners_);
   RELEASE_(infoStream_);
   RELEASE_(commitLock_);
-  RELEASE_(flushControl_);
   [super dealloc];
 }
 
@@ -2218,7 +2218,7 @@ void OrgApacheLuceneIndexIndexWriter_initWithOrgApacheLuceneStoreDirectory_withO
   JreStrongAssignAndConsume(&self->readerFinishedListeners_, new_OrgApacheLuceneUtilMapBackedSet_initWithJavaUtilMap_(create_JavaUtilConcurrentConcurrentHashMap_init()));
   self->maxFieldLength_ = OrgApacheLuceneIndexIndexWriter_DEFAULT_MAX_FIELD_LENGTH;
   JreStrongAssignAndConsume(&self->commitLock_, new_NSObject_init());
-  JreStrongAssignAndConsume(&self->flushControl_, new_OrgApacheLuceneIndexIndexWriter_FlushControl_initWithOrgApacheLuceneIndexIndexWriter_(self));
+  self->flushControl_ = create_OrgApacheLuceneIndexIndexWriter_FlushControl_initWithOrgApacheLuceneIndexIndexWriter_(self);
   JreStrongAssign(&self->config_, (OrgApacheLuceneIndexIndexWriterConfig *) cast_chk([((OrgApacheLuceneIndexIndexWriterConfig *) nil_chk(conf)) java_clone], [OrgApacheLuceneIndexIndexWriterConfig class]));
   JreStrongAssign(&self->directory_, d);
   JreStrongAssign(&self->analyzer_, [conf getAnalyzer]);
@@ -2484,7 +2484,7 @@ void OrgApacheLuceneIndexIndexWriter_maybeMergeWithInt_(OrgApacheLuceneIndexInde
 
 void OrgApacheLuceneIndexIndexWriter_updatePendingMergesWithInt_(OrgApacheLuceneIndexIndexWriter *self, jint maxNumSegments) {
   @synchronized(self) {
-    JreAssert((maxNumSegments == -1 || maxNumSegments > 0), (@"org/apache/lucene/index/IndexWriter.java:2751 condition failed: assert maxNumSegments == -1 || maxNumSegments > 0;"));
+    JreAssert((maxNumSegments == -1 || maxNumSegments > 0), (@"org/apache/lucene/index/IndexWriter.java:2754 condition failed: assert maxNumSegments == -1 || maxNumSegments > 0;"));
     if (self->stopMerges_) {
       return;
     }
@@ -2542,7 +2542,7 @@ void OrgApacheLuceneIndexIndexWriter_rollbackInternal(OrgApacheLuceneIndexIndexW
         [self messageWithNSString:JreStrcat("$$", @"rollback: infos=", [self segStringWithJavaLangIterable:self->segmentInfos_])];
       }
       [((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(self->docWriter_)) abort];
-      JreAssert(([self testPointWithNSString:@"rollback before checkpoint"]), (@"org/apache/lucene/index/IndexWriter.java:2880 condition failed: assert testPoint(\"rollback before checkpoint\");"));
+      JreAssert(([self testPointWithNSString:@"rollback before checkpoint"]), (@"org/apache/lucene/index/IndexWriter.java:2883 condition failed: assert testPoint(\"rollback before checkpoint\");"));
       [((OrgApacheLuceneIndexIndexFileDeleter *) nil_chk(self->deleter_)) checkpointWithOrgApacheLuceneIndexSegmentInfos:self->segmentInfos_ withBoolean:false];
       [((OrgApacheLuceneIndexIndexFileDeleter *) nil_chk(self->deleter_)) refresh];
     }
@@ -2585,7 +2585,7 @@ void OrgApacheLuceneIndexIndexWriter_finishMergesWithBoolean_(OrgApacheLuceneInd
       }
       self->stopMerges_ = false;
       [self java_notifyAll];
-      JreAssert((0 == [((JavaUtilHashSet *) nil_chk(self->mergingSegments_)) size]), (@"org/apache/lucene/index/IndexWriter.java:2992 condition failed: assert 0 == mergingSegments.size();"));
+      JreAssert((0 == [((JavaUtilHashSet *) nil_chk(self->mergingSegments_)) size]), (@"org/apache/lucene/index/IndexWriter.java:2995 condition failed: assert 0 == mergingSegments.size();"));
       if (self->infoStream_ != nil) [self messageWithNSString:@"all running merges have aborted"];
     }
     else {
@@ -2787,7 +2787,7 @@ jboolean OrgApacheLuceneIndexIndexWriter_doFlushWithBoolean_(OrgApacheLuceneInde
       @throw create_JavaLangIllegalStateException_initWithNSString_(@"this writer hit an OutOfMemoryError; cannot flush");
     }
     [self doBeforeFlush];
-    JreAssert(([self testPointWithNSString:@"startDoFlush"]), (@"org/apache/lucene/index/IndexWriter.java:3604 condition failed: assert testPoint(\"startDoFlush\");"));
+    JreAssert(([self testPointWithNSString:@"startDoFlush"]), (@"org/apache/lucene/index/IndexWriter.java:3607 condition failed: assert testPoint(\"startDoFlush\");"));
     [((OrgApacheLuceneIndexIndexWriter_FlushControl *) nil_chk(self->flushControl_)) setFlushPendingNoWaitWithNSString:@"explicit flush"];
     jboolean success = false;
     @try {
@@ -2833,7 +2833,7 @@ jboolean OrgApacheLuceneIndexIndexWriter_doFlushWithBoolean_(OrgApacheLuceneInde
           [self checkpoint];
         }
         [self->bufferedDeletesStream_ pruneWithOrgApacheLuceneIndexSegmentInfos:self->segmentInfos_];
-        JreAssert((![self->bufferedDeletesStream_ any]), (@"org/apache/lucene/index/IndexWriter.java:3676 condition failed: assert !bufferedDeletesStream.any();"));
+        JreAssert((![self->bufferedDeletesStream_ any]), (@"org/apache/lucene/index/IndexWriter.java:3679 condition failed: assert !bufferedDeletesStream.any();"));
         [self->flushControl_ clearDeletes];
       }
       else if (self->infoStream_ != nil) {
@@ -2865,7 +2865,7 @@ void OrgApacheLuceneIndexIndexWriter_ensureValidMergeWithOrgApacheLuceneIndexMer
 
 void OrgApacheLuceneIndexIndexWriter_commitMergedDeletesWithOrgApacheLuceneIndexMergePolicy_OneMerge_withOrgApacheLuceneIndexSegmentReader_(OrgApacheLuceneIndexIndexWriter *self, OrgApacheLuceneIndexMergePolicy_OneMerge *merge, OrgApacheLuceneIndexSegmentReader *mergedReader) {
   @synchronized(self) {
-    JreAssert(([self testPointWithNSString:@"startCommitMergeDeletes"]), (@"org/apache/lucene/index/IndexWriter.java:3735 condition failed: assert testPoint(\"startCommitMergeDeletes\");"));
+    JreAssert(([self testPointWithNSString:@"startCommitMergeDeletes"]), (@"org/apache/lucene/index/IndexWriter.java:3738 condition failed: assert testPoint(\"startCommitMergeDeletes\");"));
     id<JavaUtilList> sourceSegments = ((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge))->segments_;
     if (self->infoStream_ != nil) [self messageWithNSString:JreStrcat("$$", @"commitMergeDeletes ", [merge segStringWithOrgApacheLuceneStoreDirectory:self->directory_])];
     jint docUpto = 0;
@@ -2883,7 +2883,7 @@ void OrgApacheLuceneIndexIndexWriter_commitMergedDeletesWithOrgApacheLuceneIndex
       if ([previousReader hasDeletions]) {
         if ([((OrgApacheLuceneIndexSegmentReader *) nil_chk(currentReader)) numDeletedDocs] > [previousReader numDeletedDocs]) {
           for (jint j = 0; j < docCount; j++) {
-            if ([previousReader isDeletedWithInt:j]) JreAssert(([currentReader isDeletedWithInt:j]), (@"org/apache/lucene/index/IndexWriter.java:3773 condition failed: assert currentReader.isDeleted(j);"));
+            if ([previousReader isDeletedWithInt:j]) JreAssert(([currentReader isDeletedWithInt:j]), (@"org/apache/lucene/index/IndexWriter.java:3776 condition failed: assert currentReader.isDeleted(j);"));
             else {
               if ([currentReader isDeletedWithInt:j]) {
                 [((OrgApacheLuceneIndexSegmentReader *) nil_chk(mergedReader)) doDeleteWithInt:docUpto];
@@ -2908,27 +2908,27 @@ void OrgApacheLuceneIndexIndexWriter_commitMergedDeletesWithOrgApacheLuceneIndex
       }
       else docUpto += info->docCount_;
     }
-    JreAssert(([((OrgApacheLuceneIndexSegmentReader *) nil_chk(mergedReader)) numDeletedDocs] == delCount), (@"org/apache/lucene/index/IndexWriter.java:3800 condition failed: assert mergedReader.numDeletedDocs() == delCount;"));
+    JreAssert(([((OrgApacheLuceneIndexSegmentReader *) nil_chk(mergedReader)) numDeletedDocs] == delCount), (@"org/apache/lucene/index/IndexWriter.java:3803 condition failed: assert mergedReader.numDeletedDocs() == delCount;"));
     mergedReader->hasChanges_ = (delCount > 0);
-    JreAssert((!mergedReader->hasChanges_ || minGen > [((OrgApacheLuceneIndexSegmentInfo *) nil_chk([mergedReader getSegmentInfo])) getBufferedDeletesGen]), (@"org/apache/lucene/index/IndexWriter.java:3809 condition failed: assert !mergedReader.hasChanges || minGen > mergedReader.getSegmentInfo().getBufferedDeletesGen();"));
+    JreAssert((!mergedReader->hasChanges_ || minGen > [((OrgApacheLuceneIndexSegmentInfo *) nil_chk([mergedReader getSegmentInfo])) getBufferedDeletesGen]), (@"org/apache/lucene/index/IndexWriter.java:3812 condition failed: assert !mergedReader.hasChanges || minGen > mergedReader.getSegmentInfo().getBufferedDeletesGen();"));
     [((OrgApacheLuceneIndexSegmentInfo *) nil_chk([mergedReader getSegmentInfo])) setBufferedDeletesGenWithLong:minGen];
   }
 }
 
 jboolean OrgApacheLuceneIndexIndexWriter_commitMergeWithOrgApacheLuceneIndexMergePolicy_OneMerge_withOrgApacheLuceneIndexSegmentReader_(OrgApacheLuceneIndexIndexWriter *self, OrgApacheLuceneIndexMergePolicy_OneMerge *merge, OrgApacheLuceneIndexSegmentReader *mergedReader) {
   @synchronized(self) {
-    JreAssert(([self testPointWithNSString:@"startCommitMerge"]), (@"org/apache/lucene/index/IndexWriter.java:3816 condition failed: assert testPoint(\"startCommitMerge\");"));
+    JreAssert(([self testPointWithNSString:@"startCommitMerge"]), (@"org/apache/lucene/index/IndexWriter.java:3819 condition failed: assert testPoint(\"startCommitMerge\");"));
     if (JreLoadVolatileBoolean(&self->hitOOM_)) {
       @throw create_JavaLangIllegalStateException_initWithNSString_(@"this writer hit an OutOfMemoryError; cannot complete merge");
     }
     if (self->infoStream_ != nil) [self messageWithNSString:JreStrcat("$$$$", @"commitMerge: ", [((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge)) segStringWithOrgApacheLuceneStoreDirectory:self->directory_], @" index=", [self segString])];
-    JreAssert((((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge))->registerDone_), (@"org/apache/lucene/index/IndexWriter.java:3825 condition failed: assert merge.registerDone;"));
+    JreAssert((((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge))->registerDone_), (@"org/apache/lucene/index/IndexWriter.java:3828 condition failed: assert merge.registerDone;"));
     if ([merge isAborted]) {
       if (self->infoStream_ != nil) [self messageWithNSString:JreStrcat("$$$", @"commitMerge: skipping merge ", [merge segStringWithOrgApacheLuceneStoreDirectory:self->directory_], @": it was aborted")];
       return false;
     }
     OrgApacheLuceneIndexIndexWriter_commitMergedDeletesWithOrgApacheLuceneIndexMergePolicy_OneMerge_withOrgApacheLuceneIndexSegmentReader_(self, merge, mergedReader);
-    JreAssert((![((OrgApacheLuceneIndexSegmentInfos *) nil_chk(self->segmentInfos_)) containsWithOrgApacheLuceneIndexSegmentInfo:merge->info_]), (@"org/apache/lucene/index/IndexWriter.java:3846 condition failed: assert !segmentInfos.contains(merge.info);"));
+    JreAssert((![((OrgApacheLuceneIndexSegmentInfos *) nil_chk(self->segmentInfos_)) containsWithOrgApacheLuceneIndexSegmentInfo:merge->info_]), (@"org/apache/lucene/index/IndexWriter.java:3849 condition failed: assert !segmentInfos.contains(merge.info);"));
     jboolean allDeleted = [((OrgApacheLuceneIndexSegmentReader *) nil_chk(mergedReader)) numDocs] == 0;
     if (self->infoStream_ != nil && allDeleted) {
       [self messageWithNSString:JreStrcat("$@$$", @"merged segment ", merge->info_, @" is 100% deleted", (self->keepFullyDeletedSegments_ ? @"" : @"; skipping insert"))];
@@ -3025,9 +3025,9 @@ void OrgApacheLuceneIndexIndexWriter_mergeInitWithOrgApacheLuceneIndexMergePolic
 
 void OrgApacheLuceneIndexIndexWriter__mergeInitWithOrgApacheLuceneIndexMergePolicy_OneMerge_(OrgApacheLuceneIndexIndexWriter *self, OrgApacheLuceneIndexMergePolicy_OneMerge *merge) {
   @synchronized(self) {
-    JreAssert(([self testPointWithNSString:@"startMergeInit"]), (@"org/apache/lucene/index/IndexWriter.java:4054 condition failed: assert testPoint(\"startMergeInit\");"));
-    JreAssert((((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge))->registerDone_), (@"org/apache/lucene/index/IndexWriter.java:4056 condition failed: assert merge.registerDone;"));
-    JreAssert((merge->maxNumSegments_ == -1 || merge->maxNumSegments_ > 0), (@"org/apache/lucene/index/IndexWriter.java:4057 condition failed: assert merge.maxNumSegments == -1 || merge.maxNumSegments > 0;"));
+    JreAssert(([self testPointWithNSString:@"startMergeInit"]), (@"org/apache/lucene/index/IndexWriter.java:4057 condition failed: assert testPoint(\"startMergeInit\");"));
+    JreAssert((((OrgApacheLuceneIndexMergePolicy_OneMerge *) nil_chk(merge))->registerDone_), (@"org/apache/lucene/index/IndexWriter.java:4059 condition failed: assert merge.registerDone;"));
+    JreAssert((merge->maxNumSegments_ == -1 || merge->maxNumSegments_ > 0), (@"org/apache/lucene/index/IndexWriter.java:4060 condition failed: assert merge.maxNumSegments == -1 || merge.maxNumSegments > 0;"));
     if (JreLoadVolatileBoolean(&self->hitOOM_)) {
       @throw create_JavaLangIllegalStateException_initWithNSString_(@"this writer hit an OutOfMemoryError; cannot merge");
     }
@@ -3069,11 +3069,11 @@ void OrgApacheLuceneIndexIndexWriter__mergeInitWithOrgApacheLuceneIndexMergePoli
     if (self->infoStream_ != nil) {
       [self messageWithNSString:JreStrcat("$$", @"merge seg=", ((OrgApacheLuceneIndexSegmentInfo *) nil_chk(merge->info_))->name_)];
     }
-    JreAssert((merge->estimatedMergeBytes_ == 0), (@"org/apache/lucene/index/IndexWriter.java:4123 condition failed: assert merge.estimatedMergeBytes == 0;"));
+    JreAssert((merge->estimatedMergeBytes_ == 0), (@"org/apache/lucene/index/IndexWriter.java:4126 condition failed: assert merge.estimatedMergeBytes == 0;"));
     for (OrgApacheLuceneIndexSegmentInfo * __strong info in merge->segments_) {
       if (((OrgApacheLuceneIndexSegmentInfo *) nil_chk(info))->docCount_ > 0) {
         jint delCount = [self numDeletedDocsWithOrgApacheLuceneIndexSegmentInfo:info];
-        JreAssert((delCount <= info->docCount_), (@"org/apache/lucene/index/IndexWriter.java:4127 condition failed: assert delCount <= info.docCount;"));
+        JreAssert((delCount <= info->docCount_), (@"org/apache/lucene/index/IndexWriter.java:4130 condition failed: assert delCount <= info.docCount;"));
         jdouble delRatio = ((jdouble) delCount) / info->docCount_;
         JrePlusAssignLongD(&merge->estimatedMergeBytes_, [info sizeInBytesWithBoolean:true] * (1.0 - delRatio));
       }
@@ -3192,7 +3192,7 @@ jint OrgApacheLuceneIndexIndexWriter_mergeMiddleWithOrgApacheLuceneIndexMergePol
     [merge checkAbortedWithOrgApacheLuceneStoreDirectory:self->directory_];
     mergedDocCount = ((OrgApacheLuceneIndexSegmentInfo *) nil_chk(merge->info_))->docCount_ = [merger merge];
     [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(merge->info_)) setHasVectorsWithBoolean:[((OrgApacheLuceneIndexFieldInfos *) nil_chk([merger fieldInfos])) hasVectors]];
-    JreAssert((mergedDocCount == totDocCount), (@"org/apache/lucene/index/IndexWriter.java:4300 condition failed: assert mergedDocCount == totDocCount;"));
+    JreAssert((mergedDocCount == totDocCount), (@"org/apache/lucene/index/IndexWriter.java:4303 condition failed: assert mergedDocCount == totDocCount;"));
     if (self->infoStream_ != nil) {
       [self messageWithNSString:JreStrcat("$I$I", @"merge store matchedCount=", [merger getMatchedSubReaderCount], @" vs ", [((id<JavaUtilList>) nil_chk(merge->readers_)) size])];
     }
@@ -3310,15 +3310,15 @@ jboolean OrgApacheLuceneIndexIndexWriter_filesExistWithOrgApacheLuceneIndexSegme
 }
 
 void OrgApacheLuceneIndexIndexWriter_startCommitWithOrgApacheLuceneIndexSegmentInfos_withJavaUtilMap_(OrgApacheLuceneIndexIndexWriter *self, OrgApacheLuceneIndexSegmentInfos *toSync, id<JavaUtilMap> commitUserData) {
-  JreAssert(([self testPointWithNSString:@"startStartCommit"]), (@"org/apache/lucene/index/IndexWriter.java:4542 condition failed: assert testPoint(\"startStartCommit\");"));
-  JreAssert((JreLoadVolatileId(&self->pendingCommit_) == nil), (@"org/apache/lucene/index/IndexWriter.java:4543 condition failed: assert pendingCommit == null;"));
+  JreAssert(([self testPointWithNSString:@"startStartCommit"]), (@"org/apache/lucene/index/IndexWriter.java:4545 condition failed: assert testPoint(\"startStartCommit\");"));
+  JreAssert((JreLoadVolatileId(&self->pendingCommit_) == nil), (@"org/apache/lucene/index/IndexWriter.java:4546 condition failed: assert pendingCommit == null;"));
   if (JreLoadVolatileBoolean(&self->hitOOM_)) {
     @throw create_JavaLangIllegalStateException_initWithNSString_(@"this writer hit an OutOfMemoryError; cannot commit");
   }
   @try {
     if (self->infoStream_ != nil) [self messageWithNSString:@"startCommit(): start"];
     @synchronized(self) {
-      JreAssert((self->lastCommitChangeCount_ <= JreLoadVolatileLong(&self->changeCount_)), (@"org/apache/lucene/index/IndexWriter.java:4557 condition failed: assert lastCommitChangeCount <= changeCount;"));
+      JreAssert((self->lastCommitChangeCount_ <= JreLoadVolatileLong(&self->changeCount_)), (@"org/apache/lucene/index/IndexWriter.java:4560 condition failed: assert lastCommitChangeCount <= changeCount;"));
       if (JreLoadVolatileLong(&self->pendingCommitChangeCount_) == self->lastCommitChangeCount_) {
         if (self->infoStream_ != nil) {
           [self messageWithNSString:@"  skip startCommit(): no changes pending"];
@@ -3327,19 +3327,19 @@ void OrgApacheLuceneIndexIndexWriter_startCommitWithOrgApacheLuceneIndexSegmentI
         return;
       }
       if (self->infoStream_ != nil) [self messageWithNSString:JreStrcat("$$$J", @"startCommit index=", [self segStringWithJavaLangIterable:toSync], @" changeCount=", JreLoadVolatileLong(&self->changeCount_))];
-      JreAssert((OrgApacheLuceneIndexIndexWriter_filesExistWithOrgApacheLuceneIndexSegmentInfos_(self, toSync)), (@"org/apache/lucene/index/IndexWriter.java:4574 condition failed: assert filesExist(toSync);"));
+      JreAssert((OrgApacheLuceneIndexIndexWriter_filesExistWithOrgApacheLuceneIndexSegmentInfos_(self, toSync)), (@"org/apache/lucene/index/IndexWriter.java:4577 condition failed: assert filesExist(toSync);"));
       if (commitUserData != nil) {
         [((OrgApacheLuceneIndexSegmentInfos *) nil_chk(toSync)) setUserDataWithJavaUtilMap:commitUserData];
       }
     }
-    JreAssert(([self testPointWithNSString:@"midStartCommit"]), (@"org/apache/lucene/index/IndexWriter.java:4581 condition failed: assert testPoint(\"midStartCommit\");"));
+    JreAssert(([self testPointWithNSString:@"midStartCommit"]), (@"org/apache/lucene/index/IndexWriter.java:4584 condition failed: assert testPoint(\"midStartCommit\");"));
     jboolean pendingCommitSet = false;
     @try {
       [((OrgApacheLuceneStoreDirectory *) nil_chk(self->directory_)) syncWithJavaUtilCollection:[((OrgApacheLuceneIndexSegmentInfos *) nil_chk(toSync)) filesWithOrgApacheLuceneStoreDirectory:self->directory_ withBoolean:false]];
-      JreAssert(([self testPointWithNSString:@"midStartCommit2"]), (@"org/apache/lucene/index/IndexWriter.java:4590 condition failed: assert testPoint(\"midStartCommit2\");"));
+      JreAssert(([self testPointWithNSString:@"midStartCommit2"]), (@"org/apache/lucene/index/IndexWriter.java:4593 condition failed: assert testPoint(\"midStartCommit2\");"));
       @synchronized(self) {
-        JreAssert((JreLoadVolatileId(&self->pendingCommit_) == nil), (@"org/apache/lucene/index/IndexWriter.java:4594 condition failed: assert pendingCommit == null;"));
-        JreAssert(([((OrgApacheLuceneIndexSegmentInfos *) nil_chk(self->segmentInfos_)) getGeneration] == [toSync getGeneration]), (@"org/apache/lucene/index/IndexWriter.java:4596 condition failed: assert segmentInfos.getGeneration() == toSync.getGeneration();"));
+        JreAssert((JreLoadVolatileId(&self->pendingCommit_) == nil), (@"org/apache/lucene/index/IndexWriter.java:4597 condition failed: assert pendingCommit == null;"));
+        JreAssert(([((OrgApacheLuceneIndexSegmentInfos *) nil_chk(self->segmentInfos_)) getGeneration] == [toSync getGeneration]), (@"org/apache/lucene/index/IndexWriter.java:4599 condition failed: assert segmentInfos.getGeneration() == toSync.getGeneration();"));
         [toSync prepareCommitWithOrgApacheLuceneStoreDirectory:self->directory_];
         pendingCommitSet = true;
         JreVolatileStrongAssign(&self->pendingCommit_, toSync);
@@ -3347,7 +3347,7 @@ void OrgApacheLuceneIndexIndexWriter_startCommitWithOrgApacheLuceneIndexSegmentI
       if (self->infoStream_ != nil) {
         [self messageWithNSString:@"done all syncs"];
       }
-      JreAssert(([self testPointWithNSString:@"midStartCommitSuccess"]), (@"org/apache/lucene/index/IndexWriter.java:4610 condition failed: assert testPoint(\"midStartCommitSuccess\");"));
+      JreAssert(([self testPointWithNSString:@"midStartCommitSuccess"]), (@"org/apache/lucene/index/IndexWriter.java:4613 condition failed: assert testPoint(\"midStartCommitSuccess\");"));
     }
     @finally {
       @synchronized(self) {
@@ -3364,7 +3364,7 @@ void OrgApacheLuceneIndexIndexWriter_startCommitWithOrgApacheLuceneIndexSegmentI
   @catch (JavaLangOutOfMemoryError *oom) {
     OrgApacheLuceneIndexIndexWriter_handleOOMWithJavaLangOutOfMemoryError_withNSString_(self, oom, @"startCommit");
   }
-  JreAssert(([self testPointWithNSString:@"finishStartCommit"]), (@"org/apache/lucene/index/IndexWriter.java:4633 condition failed: assert testPoint(\"finishStartCommit\");"));
+  JreAssert(([self testPointWithNSString:@"finishStartCommit"]), (@"org/apache/lucene/index/IndexWriter.java:4636 condition failed: assert testPoint(\"finishStartCommit\");"));
 }
 
 jboolean OrgApacheLuceneIndexIndexWriter_isLockedWithOrgApacheLuceneStoreDirectory_(OrgApacheLuceneStoreDirectory *directory) {
@@ -3645,10 +3645,10 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexIndexWriter)
                                                withBoolean:(jboolean)drop {
   @synchronized(self) {
     jboolean pooled = [((id<JavaUtilMap>) nil_chk(readerMap_)) containsKeyWithId:[((OrgApacheLuceneIndexSegmentReader *) nil_chk(sr)) getSegmentInfo]];
-    JreAssert((!pooled || [readerMap_ getWithId:[sr getSegmentInfo]] == sr), (@"org/apache/lucene/index/IndexWriter.java:543 condition failed: assert !pooled || readerMap.get(sr.getSegmentInfo()) == sr;"));
+    JreAssert((!pooled || [readerMap_ getWithId:[sr getSegmentInfo]] == sr), (@"org/apache/lucene/index/IndexWriter.java:546 condition failed: assert !pooled || readerMap.get(sr.getSegmentInfo()) == sr;"));
     [sr decRef];
     if (pooled && (drop || (!JreLoadVolatileBoolean(&this$0_->poolReaders_) && [sr getRefCount] == 1))) {
-      JreAssert((!sr->hasChanges_ || JavaLangThread_holdsLockWithId_(this$0_)), (@"org/apache/lucene/index/IndexWriter.java:553 condition failed: assert !sr.hasChanges || Thread.holdsLock(IndexWriter.this);"));
+      JreAssert((!sr->hasChanges_ || JavaLangThread_holdsLockWithId_(this$0_)), (@"org/apache/lucene/index/IndexWriter.java:556 condition failed: assert !sr.hasChanges || Thread.holdsLock(IndexWriter.this);"));
       sr->hasChanges_ &= !drop;
       jboolean hasChanges = sr->hasChanges_;
       [sr close];
@@ -3690,11 +3690,11 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexIndexWriter)
 
 - (void)close {
   @synchronized(self) {
-    JreAssert((JavaLangThread_holdsLockWithId_(this$0_)), (@"org/apache/lucene/index/IndexWriter.java:608 condition failed: assert Thread.holdsLock(IndexWriter.this);"));
+    JreAssert((JavaLangThread_holdsLockWithId_(this$0_)), (@"org/apache/lucene/index/IndexWriter.java:611 condition failed: assert Thread.holdsLock(IndexWriter.this);"));
     for (id<JavaUtilMap_Entry> __strong ent in nil_chk([((id<JavaUtilMap>) nil_chk(readerMap_)) entrySet])) {
       OrgApacheLuceneIndexSegmentReader *sr = [((id<JavaUtilMap_Entry>) nil_chk(ent)) getValue];
       if (((OrgApacheLuceneIndexSegmentReader *) nil_chk(sr))->hasChanges_) {
-        JreAssert(([self infoIsLiveWithOrgApacheLuceneIndexSegmentInfo:[sr getSegmentInfo]]), (@"org/apache/lucene/index/IndexWriter.java:614 condition failed: assert infoIsLive(sr.getSegmentInfo());"));
+        JreAssert(([self infoIsLiveWithOrgApacheLuceneIndexSegmentInfo:[sr getSegmentInfo]]), (@"org/apache/lucene/index/IndexWriter.java:617 condition failed: assert infoIsLive(sr.getSegmentInfo());"));
         [sr doCommitWithJavaUtilMap:nil];
         [((OrgApacheLuceneIndexIndexFileDeleter *) nil_chk(this$0_->deleter_)) checkpointWithOrgApacheLuceneIndexSegmentInfos:this$0_->segmentInfos_ withBoolean:false];
       }
@@ -3706,11 +3706,11 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexIndexWriter)
 
 - (void)commitWithOrgApacheLuceneIndexSegmentInfos:(OrgApacheLuceneIndexSegmentInfos *)infos {
   @synchronized(self) {
-    JreAssert((JavaLangThread_holdsLockWithId_(this$0_)), (@"org/apache/lucene/index/IndexWriter.java:641 condition failed: assert Thread.holdsLock(IndexWriter.this);"));
+    JreAssert((JavaLangThread_holdsLockWithId_(this$0_)), (@"org/apache/lucene/index/IndexWriter.java:644 condition failed: assert Thread.holdsLock(IndexWriter.this);"));
     for (OrgApacheLuceneIndexSegmentInfo * __strong info in nil_chk(infos)) {
       OrgApacheLuceneIndexSegmentReader *sr = [((id<JavaUtilMap>) nil_chk(readerMap_)) getWithId:info];
       if (sr != nil && sr->hasChanges_) {
-        JreAssert(([self infoIsLiveWithOrgApacheLuceneIndexSegmentInfo:info]), (@"org/apache/lucene/index/IndexWriter.java:647 condition failed: assert infoIsLive(info);"));
+        JreAssert(([self infoIsLiveWithOrgApacheLuceneIndexSegmentInfo:info]), (@"org/apache/lucene/index/IndexWriter.java:650 condition failed: assert infoIsLive(info);"));
         [sr doCommitWithJavaUtilMap:nil];
         [((OrgApacheLuceneIndexIndexFileDeleter *) nil_chk(this$0_->deleter_)) checkpointWithOrgApacheLuceneIndexSegmentInfos:this$0_->segmentInfos_ withBoolean:false];
       }

@@ -74,7 +74,7 @@ __attribute__((unused)) static void OrgApacheLuceneIndexStoredFieldsWriter_initF
     if (freeCount_ == 0) {
       allocCount_++;
       if (allocCount_ > ((IOSObjectArray *) nil_chk(docFreeList_))->size_) {
-        JreAssert((allocCount_ == 1 + docFreeList_->size_), (@"org/apache/lucene/index/StoredFieldsWriter.java:79 condition failed: assert allocCount == 1+docFreeList.length;"));
+        JreAssert((allocCount_ == 1 + docFreeList_->size_), (@"org/apache/lucene/index/StoredFieldsWriter.java:82 condition failed: assert allocCount == 1+docFreeList.length;"));
         JreStrongAssignAndConsume(&docFreeList_, [IOSObjectArray newArrayWithLength:OrgApacheLuceneUtilArrayUtil_oversizeWithInt_withInt_(allocCount_, JreLoadStatic(OrgApacheLuceneUtilRamUsageEstimator, NUM_BYTES_OBJECT_REF)) type:OrgApacheLuceneIndexStoredFieldsWriter_PerDoc_class_()]);
       }
       return create_OrgApacheLuceneIndexStoredFieldsWriter_PerDoc_initWithOrgApacheLuceneIndexStoredFieldsWriter_(self);
@@ -104,23 +104,23 @@ __attribute__((unused)) static void OrgApacheLuceneIndexStoredFieldsWriter_initF
 
 - (void)finishDocumentWithOrgApacheLuceneIndexStoredFieldsWriter_PerDoc:(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *)perDoc {
   @synchronized(self) {
-    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(docWriter_))->writer_)) testPointWithNSString:@"StoredFieldsWriter.finishDocument start"]), (@"org/apache/lucene/index/StoredFieldsWriter.java:107 condition failed: assert docWriter.writer.testPoint(\"StoredFieldsWriter.finishDocument start\");"));
+    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(docWriter_))->writer_)) testPointWithNSString:@"StoredFieldsWriter.finishDocument start"]), (@"org/apache/lucene/index/StoredFieldsWriter.java:110 condition failed: assert docWriter.writer.testPoint(\"StoredFieldsWriter.finishDocument start\");"));
     OrgApacheLuceneIndexStoredFieldsWriter_initFieldsWriter(self);
     [self fillWithInt:((OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *) nil_chk(perDoc))->docID_];
     [((OrgApacheLuceneIndexFieldsWriter *) nil_chk(fieldsWriter_)) flushDocumentWithInt:perDoc->numStoredFields_ withOrgApacheLuceneStoreRAMOutputStream:perDoc->fdt_];
     lastDocID_++;
     [perDoc reset];
     [self freeWithOrgApacheLuceneIndexStoredFieldsWriter_PerDoc:perDoc];
-    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(docWriter_->writer_)) testPointWithNSString:@"StoredFieldsWriter.finishDocument end"]), (@"org/apache/lucene/index/StoredFieldsWriter.java:117 condition failed: assert docWriter.writer.testPoint(\"StoredFieldsWriter.finishDocument end\");"));
+    JreAssert(([((OrgApacheLuceneIndexIndexWriter *) nil_chk(docWriter_->writer_)) testPointWithNSString:@"StoredFieldsWriter.finishDocument end"]), (@"org/apache/lucene/index/StoredFieldsWriter.java:120 condition failed: assert docWriter.writer.testPoint(\"StoredFieldsWriter.finishDocument end\");"));
   }
 }
 
 - (void)freeWithOrgApacheLuceneIndexStoredFieldsWriter_PerDoc:(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *)perDoc {
   @synchronized(self) {
-    JreAssert((freeCount_ < ((IOSObjectArray *) nil_chk(docFreeList_))->size_), (@"org/apache/lucene/index/StoredFieldsWriter.java:121 condition failed: assert freeCount < docFreeList.length;"));
-    JreAssert((0 == ((OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *) nil_chk(perDoc))->numStoredFields_), (@"org/apache/lucene/index/StoredFieldsWriter.java:122 condition failed: assert 0 == perDoc.numStoredFields;"));
-    JreAssert((0 == [((OrgApacheLuceneStoreRAMOutputStream *) nil_chk(perDoc->fdt_)) length]), (@"org/apache/lucene/index/StoredFieldsWriter.java:123 condition failed: assert 0 == perDoc.fdt.length();"));
-    JreAssert((0 == [((OrgApacheLuceneStoreRAMOutputStream *) nil_chk(perDoc->fdt_)) getFilePointer]), (@"org/apache/lucene/index/StoredFieldsWriter.java:124 condition failed: assert 0 == perDoc.fdt.getFilePointer();"));
+    JreAssert((freeCount_ < ((IOSObjectArray *) nil_chk(docFreeList_))->size_), (@"org/apache/lucene/index/StoredFieldsWriter.java:124 condition failed: assert freeCount < docFreeList.length;"));
+    JreAssert((0 == ((OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *) nil_chk(perDoc))->numStoredFields_), (@"org/apache/lucene/index/StoredFieldsWriter.java:125 condition failed: assert 0 == perDoc.numStoredFields;"));
+    JreAssert((0 == [((OrgApacheLuceneStoreRAMOutputStream *) nil_chk(perDoc->fdt_)) length]), (@"org/apache/lucene/index/StoredFieldsWriter.java:126 condition failed: assert 0 == perDoc.fdt.length();"));
+    JreAssert((0 == [((OrgApacheLuceneStoreRAMOutputStream *) nil_chk(perDoc->fdt_)) getFilePointer]), (@"org/apache/lucene/index/StoredFieldsWriter.java:127 condition failed: assert 0 == perDoc.fdt.getFilePointer();"));
     IOSObjectArray_Set(nil_chk(docFreeList_), freeCount_++, perDoc);
   }
 }
@@ -225,9 +225,13 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexStoredFieldsWriter)
   [this$0_ finishDocumentWithOrgApacheLuceneIndexStoredFieldsWriter_PerDoc:self];
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *)original {
+  [super __javaClone:original];
+  [buffer_ release];
+}
+
 - (void)dealloc {
   RELEASE_(this$0_);
-  RELEASE_(buffer_);
   RELEASE_(fdt_);
   [super dealloc];
 }
@@ -264,7 +268,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(OrgApacheLuceneIndexStoredFieldsWriter)
 void OrgApacheLuceneIndexStoredFieldsWriter_PerDoc_initWithOrgApacheLuceneIndexStoredFieldsWriter_(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *self, OrgApacheLuceneIndexStoredFieldsWriter *outer$) {
   JreStrongAssign(&self->this$0_, outer$);
   OrgApacheLuceneIndexDocumentsWriter_DocWriter_init(self);
-  JreStrongAssign(&self->buffer_, [((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(outer$->docWriter_)) newPerDocBuffer]);
+  self->buffer_ = [((OrgApacheLuceneIndexDocumentsWriter *) nil_chk(outer$->docWriter_)) newPerDocBuffer];
   JreStrongAssignAndConsume(&self->fdt_, new_OrgApacheLuceneStoreRAMOutputStream_initWithOrgApacheLuceneStoreRAMFile_(self->buffer_));
 }
 

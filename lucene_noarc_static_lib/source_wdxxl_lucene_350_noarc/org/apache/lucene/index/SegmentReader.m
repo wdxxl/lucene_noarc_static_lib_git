@@ -218,7 +218,7 @@ J2OBJC_IGNORE_DESIGNATED_END
     if (normsUpToDate && deletionsUpToDate && !doClone && openReadOnly && readOnly_) {
       return nil;
     }
-    JreAssert((!doClone || (normsUpToDate && deletionsUpToDate)), (@"org/apache/lucene/index/SegmentReader.java:239 condition failed: assert !doClone || (normsUpToDate && deletionsUpToDate);"));
+    JreAssert((!doClone || (normsUpToDate && deletionsUpToDate)), (@"org/apache/lucene/index/SegmentReader.java:240 condition failed: assert !doClone || (normsUpToDate && deletionsUpToDate);"));
     OrgApacheLuceneIndexSegmentReader *clone = openReadOnly ? create_OrgApacheLuceneIndexReadOnlySegmentReader_init() : create_OrgApacheLuceneIndexSegmentReader_init();
     jboolean success = false;
     @try {
@@ -244,7 +244,7 @@ J2OBJC_IGNORE_DESIGNATED_END
       }
       else {
         if (!deletionsUpToDate) {
-          JreAssert((clone->deletedDocs_ == nil), (@"org/apache/lucene/index/SegmentReader.java:271 condition failed: assert clone.deletedDocs == null;"));
+          JreAssert((clone->deletedDocs_ == nil), (@"org/apache/lucene/index/SegmentReader.java:272 condition failed: assert clone.deletedDocs == null;"));
           OrgApacheLuceneIndexSegmentReader_loadDeletedDocs(clone);
         }
         else if (deletedDocs_ != nil) {
@@ -348,7 +348,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 - (void)doUndeleteAll {
   deletedDocsDirty_ = false;
   if (deletedDocs_ != nil) {
-    JreAssert((deletedDocsRef_ != nil), (@"org/apache/lucene/index/SegmentReader.java:438 condition failed: assert deletedDocsRef != null;"));
+    JreAssert((deletedDocsRef_ != nil), (@"org/apache/lucene/index/SegmentReader.java:439 condition failed: assert deletedDocsRef != null;"));
     [((JavaUtilConcurrentAtomicAtomicInteger *) nil_chk(deletedDocsRef_)) decrementAndGet];
     JreStrongAssign(&deletedDocs_, nil);
     JreStrongAssign(&deletedDocsRef_, nil);
@@ -357,8 +357,8 @@ J2OBJC_IGNORE_DESIGNATED_END
     [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(si_)) setDelCountWithInt:0];
   }
   else {
-    JreAssert((deletedDocsRef_ == nil), (@"org/apache/lucene/index/SegmentReader.java:446 condition failed: assert deletedDocsRef == null;"));
-    JreAssert((pendingDeleteCount_ == 0), (@"org/apache/lucene/index/SegmentReader.java:447 condition failed: assert pendingDeleteCount == 0;"));
+    JreAssert((deletedDocsRef_ == nil), (@"org/apache/lucene/index/SegmentReader.java:447 condition failed: assert deletedDocsRef == null;"));
+    JreAssert((pendingDeleteCount_ == 0), (@"org/apache/lucene/index/SegmentReader.java:448 condition failed: assert pendingDeleteCount == 0;"));
   }
 }
 
@@ -684,9 +684,13 @@ withOrgApacheLuceneIndexTermVectorMapper:(OrgApacheLuceneIndexTermVectorMapper *
 - (void)readerFinished {
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexSegmentReader *)original {
+  [super __javaClone:original];
+  [fieldsReaderLocal_ release];
+}
+
 - (void)dealloc {
   RELEASE_(si_);
-  RELEASE_(fieldsReaderLocal_);
   RELEASE_(termVectorsLocal_);
   RELEASE_(deletedDocs_);
   RELEASE_(deletedDocsRef_);
@@ -866,7 +870,7 @@ withOrgApacheLuceneIndexTermVectorMapper:(OrgApacheLuceneIndexTermVectorMapper *
 
 void OrgApacheLuceneIndexSegmentReader_init(OrgApacheLuceneIndexSegmentReader *self) {
   OrgApacheLuceneIndexIndexReader_init(self);
-  JreStrongAssignAndConsume(&self->fieldsReaderLocal_, new_OrgApacheLuceneIndexSegmentReader_FieldsReaderLocal_initWithOrgApacheLuceneIndexSegmentReader_(self));
+  self->fieldsReaderLocal_ = create_OrgApacheLuceneIndexSegmentReader_FieldsReaderLocal_initWithOrgApacheLuceneIndexSegmentReader_(self);
   JreStrongAssignAndConsume(&self->termVectorsLocal_, new_OrgApacheLuceneUtilCloseableThreadLocal_init());
   JreStrongAssign(&self->deletedDocs_, nil);
   JreStrongAssign(&self->deletedDocsRef_, nil);
@@ -927,12 +931,12 @@ void OrgApacheLuceneIndexSegmentReader_loadDeletedDocs(OrgApacheLuceneIndexSegme
   if (OrgApacheLuceneIndexSegmentReader_hasDeletionsWithOrgApacheLuceneIndexSegmentInfo_(self->si_)) {
     JreStrongAssignAndConsume(&self->deletedDocs_, new_OrgApacheLuceneUtilBitVector_initWithOrgApacheLuceneStoreDirectory_withNSString_([self directory], [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) getDelFileName]));
     JreStrongAssignAndConsume(&self->deletedDocsRef_, new_JavaUtilConcurrentAtomicAtomicInteger_initWithInt_(1));
-    JreAssert((OrgApacheLuceneIndexSegmentReader_checkDeletedCounts(self)), (@"org/apache/lucene/index/SegmentReader.java:161 condition failed: assert checkDeletedCounts();"));
+    JreAssert((OrgApacheLuceneIndexSegmentReader_checkDeletedCounts(self)), (@"org/apache/lucene/index/SegmentReader.java:162 condition failed: assert checkDeletedCounts();"));
     if ([((OrgApacheLuceneUtilBitVector *) nil_chk(self->deletedDocs_)) size] != ((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_))->docCount_) {
       @throw create_OrgApacheLuceneIndexCorruptIndexException_initWithNSString_(JreStrcat("$I$I$$", @"document count mismatch: deleted docs count ", [((OrgApacheLuceneUtilBitVector *) nil_chk(self->deletedDocs_)) size], @" vs segment doc count ", ((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_))->docCount_, @" segment=", self->si_->name_));
     }
   }
-  else JreAssert(([((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) getDelCount] == 0), (@"org/apache/lucene/index/SegmentReader.java:166 condition failed: assert si.getDelCount() == 0;"));
+  else JreAssert(([((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) getDelCount] == 0), (@"org/apache/lucene/index/SegmentReader.java:167 condition failed: assert si.getDelCount() == 0;"));
 }
 
 OrgApacheLuceneIndexIndexReader *OrgApacheLuceneIndexSegmentReader_cloneWithBoolean_(OrgApacheLuceneIndexSegmentReader *self, jboolean openReadOnly) {
@@ -945,7 +949,7 @@ void OrgApacheLuceneIndexSegmentReader_commitChangesWithJavaUtilMap_(OrgApacheLu
   @synchronized(self) {
     if (self->deletedDocsDirty_) {
       [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) advanceDelGen];
-      JreAssert(([((OrgApacheLuceneUtilBitVector *) nil_chk(self->deletedDocs_)) size] == ((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_))->docCount_), (@"org/apache/lucene/index/SegmentReader.java:330 condition failed: assert deletedDocs.size() == si.docCount;"));
+      JreAssert(([((OrgApacheLuceneUtilBitVector *) nil_chk(self->deletedDocs_)) size] == ((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_))->docCount_), (@"org/apache/lucene/index/SegmentReader.java:331 condition failed: assert deletedDocs.size() == si.docCount;"));
       NSString *delFileName = [self->si_ getDelFileName];
       jboolean success = false;
       @try {
@@ -966,7 +970,7 @@ void OrgApacheLuceneIndexSegmentReader_commitChangesWithJavaUtilMap_(OrgApacheLu
       JreAssert(([((OrgApacheLuceneUtilBitVector *) nil_chk(self->deletedDocs_)) count] == [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) getDelCount]), (JreStrcat("$I$I", @"delete count mismatch during commit: info=", [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) getDelCount], @" vs BitVector=", [((OrgApacheLuceneUtilBitVector *) nil_chk(self->deletedDocs_)) count])));
     }
     else {
-      JreAssert((self->pendingDeleteCount_ == 0), (@"org/apache/lucene/index/SegmentReader.java:355 condition failed: assert pendingDeleteCount == 0;"));
+      JreAssert((self->pendingDeleteCount_ == 0), (@"org/apache/lucene/index/SegmentReader.java:356 condition failed: assert pendingDeleteCount == 0;"));
     }
     if (self->normsDirty_) {
       [((OrgApacheLuceneIndexSegmentInfo *) nil_chk(self->si_)) setNumFieldsWithInt:[((OrgApacheLuceneIndexFieldInfos *) nil_chk(((OrgApacheLuceneIndexSegmentCoreReaders *) nil_chk(self->core_))->fieldInfos_)) size]];
