@@ -32,7 +32,7 @@
 
 @interface OrgApacheLuceneIndexFormatPostingsPositionsWriter : OrgApacheLuceneIndexFormatPostingsPositionsConsumer < JavaIoCloseable > {
  @public
-  OrgApacheLuceneIndexFormatPostingsDocsWriter *parent_;
+  __unsafe_unretained OrgApacheLuceneIndexFormatPostingsDocsWriter *parent_;
   OrgApacheLuceneStoreIndexOutput *out_;
   jboolean omitTermFreqAndPositions_;
   jboolean storePayloads_;
@@ -62,7 +62,6 @@
 
 J2OBJC_EMPTY_STATIC_INIT(OrgApacheLuceneIndexFormatPostingsPositionsWriter)
 
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsPositionsWriter, parent_, OrgApacheLuceneIndexFormatPostingsDocsWriter *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsPositionsWriter, out_, OrgApacheLuceneStoreIndexOutput *)
 
 FOUNDATION_EXPORT void OrgApacheLuceneIndexFormatPostingsPositionsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsDocsWriter_(OrgApacheLuceneIndexFormatPostingsPositionsWriter *self, OrgApacheLuceneIndexSegmentWriteState *state, OrgApacheLuceneIndexFormatPostingsDocsWriter *parent);

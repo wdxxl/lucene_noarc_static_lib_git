@@ -36,12 +36,16 @@
   OrgApacheLuceneUtilIOUtils_closeWithJavaIoCloseableArray_([IOSObjectArray arrayWithObjects:(id[]){ termsOut_, termsWriter_ } count:2 type:JavaIoCloseable_class_()]);
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexFormatPostingsFieldsWriter *)original {
+  [super __javaClone:original];
+  [termsWriter_ release];
+}
+
 - (void)dealloc {
   RELEASE_(dir_);
   RELEASE_(segment_);
   RELEASE_(termsOut_);
   RELEASE_(fieldInfos_);
-  RELEASE_(termsWriter_);
   RELEASE_(skipListWriter_);
   [super dealloc];
 }
@@ -84,7 +88,7 @@ void OrgApacheLuceneIndexFormatPostingsFieldsWriter_initWithOrgApacheLuceneIndex
   @try {
     JreStrongAssignAndConsume(&self->termsOut_, new_OrgApacheLuceneIndexTermInfosWriter_initWithOrgApacheLuceneStoreDirectory_withNSString_withOrgApacheLuceneIndexFieldInfos_withInt_(self->dir_, self->segment_, fieldInfos, state->termIndexInterval_));
     JreStrongAssignAndConsume(&self->skipListWriter_, new_OrgApacheLuceneIndexDefaultSkipListWriter_initWithInt_withInt_withInt_withOrgApacheLuceneStoreIndexOutput_withOrgApacheLuceneStoreIndexOutput_(self->termsOut_->skipInterval_, self->termsOut_->maxSkipLevels_, self->totalNumDocs_, nil, nil));
-    JreStrongAssignAndConsume(&self->termsWriter_, new_OrgApacheLuceneIndexFormatPostingsTermsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsFieldsWriter_(state, self));
+    self->termsWriter_ = create_OrgApacheLuceneIndexFormatPostingsTermsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsFieldsWriter_(state, self);
     success = true;
   }
   @finally {

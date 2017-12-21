@@ -35,7 +35,7 @@
                    withInt:(jint)payloadOffset
                    withInt:(jint)payloadLength {
   JreAssert((!omitTermFreqAndPositions_), (@"omitTermFreqAndPositions is true"));
-  JreAssert((out_ != nil), (@"org/apache/lucene/index/FormatPostingsPositionsWriter.java:56 condition failed: assert out != null;"));
+  JreAssert((out_ != nil), (@"org/apache/lucene/index/FormatPostingsPositionsWriter.java:57 condition failed: assert out != null;"));
   jint delta = position - lastPosition_;
   lastPosition_ = position;
   if (storePayloads_) {
@@ -64,8 +64,12 @@
   OrgApacheLuceneUtilIOUtils_closeWithJavaIoCloseableArray_([IOSObjectArray arrayWithObjects:(id[]){ out_ } count:1 type:JavaIoCloseable_class_()]);
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexFormatPostingsPositionsWriter *)original {
+  [super __javaClone:original];
+  [parent_ release];
+}
+
 - (void)dealloc {
-  RELEASE_(parent_);
   RELEASE_(out_);
   [super dealloc];
 }
@@ -104,7 +108,7 @@
 void OrgApacheLuceneIndexFormatPostingsPositionsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsDocsWriter_(OrgApacheLuceneIndexFormatPostingsPositionsWriter *self, OrgApacheLuceneIndexSegmentWriteState *state, OrgApacheLuceneIndexFormatPostingsDocsWriter *parent) {
   OrgApacheLuceneIndexFormatPostingsPositionsConsumer_init(self);
   self->lastPayloadLength_ = -1;
-  JreStrongAssign(&self->parent_, parent);
+  self->parent_ = parent;
   self->omitTermFreqAndPositions_ = ((OrgApacheLuceneIndexFormatPostingsDocsWriter *) nil_chk(parent))->omitTermFreqAndPositions_;
   if ([((OrgApacheLuceneIndexFieldInfos *) nil_chk(((OrgApacheLuceneIndexFormatPostingsFieldsWriter *) nil_chk(((OrgApacheLuceneIndexFormatPostingsTermsWriter *) nil_chk(parent->parent_))->parent_))->fieldInfos_)) hasProx]) {
     JreStrongAssign(&self->out_, [((OrgApacheLuceneStoreDirectory *) nil_chk(parent->parent_->parent_->dir_)) createOutputWithNSString:OrgApacheLuceneIndexIndexFileNames_segmentFileNameWithNSString_withNSString_(parent->parent_->parent_->segment_, OrgApacheLuceneIndexIndexFileNames_PROX_EXTENSION)]);

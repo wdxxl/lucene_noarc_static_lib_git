@@ -47,9 +47,13 @@
   [((OrgApacheLuceneIndexFormatPostingsDocsWriter *) nil_chk(docsWriter_)) close];
 }
 
+- (void)__javaClone:(OrgApacheLuceneIndexFormatPostingsTermsWriter *)original {
+  [super __javaClone:original];
+  [parent_ release];
+  [docsWriter_ release];
+}
+
 - (void)dealloc {
-  RELEASE_(parent_);
-  RELEASE_(docsWriter_);
   RELEASE_(termsOut_);
   RELEASE_(fieldInfo_);
   RELEASE_(currentTerm_);
@@ -91,9 +95,9 @@
 
 void OrgApacheLuceneIndexFormatPostingsTermsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsFieldsWriter_(OrgApacheLuceneIndexFormatPostingsTermsWriter *self, OrgApacheLuceneIndexSegmentWriteState *state, OrgApacheLuceneIndexFormatPostingsFieldsWriter *parent) {
   OrgApacheLuceneIndexFormatPostingsTermsConsumer_init(self);
-  JreStrongAssign(&self->parent_, parent);
+  self->parent_ = parent;
   JreStrongAssign(&self->termsOut_, ((OrgApacheLuceneIndexFormatPostingsFieldsWriter *) nil_chk(parent))->termsOut_);
-  JreStrongAssignAndConsume(&self->docsWriter_, new_OrgApacheLuceneIndexFormatPostingsDocsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsTermsWriter_(state, self));
+  self->docsWriter_ = create_OrgApacheLuceneIndexFormatPostingsDocsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsTermsWriter_(state, self);
 }
 
 OrgApacheLuceneIndexFormatPostingsTermsWriter *new_OrgApacheLuceneIndexFormatPostingsTermsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsFieldsWriter_(OrgApacheLuceneIndexSegmentWriteState *state, OrgApacheLuceneIndexFormatPostingsFieldsWriter *parent) {

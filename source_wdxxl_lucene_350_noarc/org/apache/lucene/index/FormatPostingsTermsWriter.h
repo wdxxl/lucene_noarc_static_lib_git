@@ -34,8 +34,8 @@
 
 @interface OrgApacheLuceneIndexFormatPostingsTermsWriter : OrgApacheLuceneIndexFormatPostingsTermsConsumer < JavaIoCloseable > {
  @public
-  OrgApacheLuceneIndexFormatPostingsFieldsWriter *parent_;
-  OrgApacheLuceneIndexFormatPostingsDocsWriter *docsWriter_;
+  __unsafe_unretained OrgApacheLuceneIndexFormatPostingsFieldsWriter *parent_;
+  __unsafe_unretained OrgApacheLuceneIndexFormatPostingsDocsWriter *docsWriter_;
   OrgApacheLuceneIndexTermInfosWriter *termsOut_;
   OrgApacheLuceneIndexFieldInfo *fieldInfo_;
   IOSCharArray *currentTerm_;
@@ -64,8 +64,6 @@
 
 J2OBJC_EMPTY_STATIC_INIT(OrgApacheLuceneIndexFormatPostingsTermsWriter)
 
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsTermsWriter, parent_, OrgApacheLuceneIndexFormatPostingsFieldsWriter *)
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsTermsWriter, docsWriter_, OrgApacheLuceneIndexFormatPostingsDocsWriter *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsTermsWriter, termsOut_, OrgApacheLuceneIndexTermInfosWriter *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsTermsWriter, fieldInfo_, OrgApacheLuceneIndexFieldInfo *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsTermsWriter, currentTerm_, IOSCharArray *)

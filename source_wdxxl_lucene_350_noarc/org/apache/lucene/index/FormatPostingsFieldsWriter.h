@@ -35,7 +35,7 @@
   NSString *segment_;
   OrgApacheLuceneIndexTermInfosWriter *termsOut_;
   OrgApacheLuceneIndexFieldInfos *fieldInfos_;
-  OrgApacheLuceneIndexFormatPostingsTermsWriter *termsWriter_;
+  __unsafe_unretained OrgApacheLuceneIndexFormatPostingsTermsWriter *termsWriter_;
   OrgApacheLuceneIndexDefaultSkipListWriter *skipListWriter_;
   jint totalNumDocs_;
 }
@@ -59,7 +59,6 @@ J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsFieldsWriter, dir_, OrgApa
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsFieldsWriter, segment_, NSString *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsFieldsWriter, termsOut_, OrgApacheLuceneIndexTermInfosWriter *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsFieldsWriter, fieldInfos_, OrgApacheLuceneIndexFieldInfos *)
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsFieldsWriter, termsWriter_, OrgApacheLuceneIndexFormatPostingsTermsWriter *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsFieldsWriter, skipListWriter_, OrgApacheLuceneIndexDefaultSkipListWriter *)
 
 FOUNDATION_EXPORT void OrgApacheLuceneIndexFormatPostingsFieldsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFieldInfos_(OrgApacheLuceneIndexFormatPostingsFieldsWriter *self, OrgApacheLuceneIndexSegmentWriteState *state, OrgApacheLuceneIndexFieldInfos *fieldInfos);

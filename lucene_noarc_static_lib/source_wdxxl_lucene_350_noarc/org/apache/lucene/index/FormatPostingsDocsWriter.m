@@ -87,11 +87,11 @@ J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexFormatPostingsDocsWriter, termInfo_, Org
 - (void)__javaClone:(OrgApacheLuceneIndexFormatPostingsDocsWriter *)original {
   [super __javaClone:original];
   [parent_ release];
+  [posWriter_ release];
 }
 
 - (void)dealloc {
   RELEASE_(out_);
-  RELEASE_(posWriter_);
   RELEASE_(skipListWriter_);
   RELEASE_(fieldInfo_);
   RELEASE_(termInfo_);
@@ -150,7 +150,7 @@ void OrgApacheLuceneIndexFormatPostingsDocsWriter_initWithOrgApacheLuceneIndexSe
     self->skipInterval_ = ((OrgApacheLuceneIndexTermInfosWriter *) nil_chk(parent->parent_->termsOut_))->skipInterval_;
     JreStrongAssign(&self->skipListWriter_, parent->parent_->skipListWriter_);
     [((OrgApacheLuceneIndexDefaultSkipListWriter *) nil_chk(self->skipListWriter_)) setFreqOutputWithOrgApacheLuceneStoreIndexOutput:self->out_];
-    JreStrongAssignAndConsume(&self->posWriter_, new_OrgApacheLuceneIndexFormatPostingsPositionsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsDocsWriter_(state, self));
+    self->posWriter_ = create_OrgApacheLuceneIndexFormatPostingsPositionsWriter_initWithOrgApacheLuceneIndexSegmentWriteState_withOrgApacheLuceneIndexFormatPostingsDocsWriter_(state, self);
     success = true;
   }
   @finally {
